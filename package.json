@@ -1,0 +1,51 @@
+{
+  "name": "numpy-visualization",
+  "version": "0.1.0",
+  "description": "Termi is a website to customize your most used command line tools",
+  "license": "GPL-3.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm run clean_client && NODE_ENV=development babel-watch server.js",
+    "build_server": "NODE_ENV=production webpack -p --config webpack.server.config.js",
+    "build_client": "NODE_ENV=production webpack -p --config webpack.config.js",
+    "build": "npm run build_client && npm run build_server",
+    "serve": "node server.entry.js",
+    "clean_client": "rm -f public/index.entry.js public/index.entry.js.map",
+    "clean_server": "rm -f server.entry.js server.entry.js.map"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "codemirror": "^5.22.0",
+    "css-loader": "^0.26.1",
+    "express": "^4.14.0",
+    "react": "^15.3.2",
+    "react-addons-update": "^15.4.1",
+    "react-codemirror": "^0.3.0",
+    "react-dom": "^15.3.2",
+    "sanitize-html": "^1.13.0",
+    "semantic-ui-css": "^2.2.4",
+    "semantic-ui-react": "^0.62.0",
+    "style-loader": "^0.13.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.20.0",
+    "babel-loader": "^6.2.7",
+    "babel-plugin-transform-class-properties": "^6.19.0",
+    "babel-plugin-transform-object-rest-spread": "^6.16.0",
+    "babel-preset-latest": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-watch": "^2.0.4",
+    "eslint": "^3.9.1",
+    "eslint-config-airbnb": "^13.0.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^2.2.3",
+    "eslint-plugin-react": "^6.6.0",
+    "webpack": "^1.14.0",
+    "webpack-dev-middleware": "^1.8.4",
+    "webpack-hot-middleware": "^2.13.2"
+  }
+}
