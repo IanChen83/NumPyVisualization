@@ -25,10 +25,10 @@ It's not difficult to caculate the dimention of the output array.
   Output shape: shape
 * **np.zeros(shape)**
   Output shape: shape
-* **np.full(shape, fill_value)**
+* np.full(shape, fill_value)
   Output shape: shape
-* np.ones_like(a)
-* np.zeros_like(a)
+* **np.ones_like(a)**
+* **np.zeros_like(a)**
 * np.full_like(a, fill_value)
 
 #### From Existing Data
@@ -39,9 +39,9 @@ It's not difficult to caculate the dimention of the output array.
 
 #### Numerical Ranges
 
-* **np.arange([start,] stop[, step])**
-* **np.linspace(start, stop[, num, endpoint])**
-* **np.logspace(start, stop[, num, endpoint, base])**
+* np.arange([start,] stop[, step])
+* np.linspace(start, stop[, num, endpoint])
+* np.logspace(start, stop[, num, endpoint, base])
 
 #### Building Matrices
 
@@ -58,9 +58,9 @@ It's not difficult to caculate the dimention of the output array.
 
 #### Transpose-like Operations
 
-* **np.ravel(a)**
-  Output shape: (1, <u>elements in a</u>)
-* **np.moveaxis(a, source, destination)**
+* np.ravel(a)
+  Output shape: (1, __elements in a__)
+* np.moveaxis(a, source, destination)
   Output shape: *Dependent on source and diestination*
 * **np.swapaxis(a, axis[, start])**
   Output shape: *Dependent on axis and start*

@@ -1,6 +1,6 @@
 # pylint: disable=R0201, C0103
 
-from .. import utils
+from . import utils
 
 INIT = utils.test_init
 END = utils.test_end

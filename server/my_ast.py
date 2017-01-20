@@ -153,4 +153,13 @@ class DimensionVisitor(ast.NodeVisitor):
                     'This function \'{0}\' is not implemented'.format(func_name)
                 )
             else:
-                self.result[node] = self.predefinedFunc[func_name](node.args)
+                self.predefinedFunc[func_name](self, node, node.args, node.keywords)
+
+    def visit_Tuple(self, node):
+        if node not in self.result:
+            self.generic_visit(node)
+            for d in node.elts:
+                if not isinstance(d, ast.Num):
+                    return
+                    # raise NotImplementedError('Tuple should have elements of type number')
+            self.result[node] = tuple([d.n for d in node.elts])

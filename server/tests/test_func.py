@@ -1,6 +1,6 @@
 # pylint: disable=R0201, C0103
 
-from .. import utils, color
+from . import utils, color
 
 INIT = utils.test_init
 END = utils.test_end
@@ -9,7 +9,7 @@ AST = utils.my_ast
 printc = utils.printc
 
 
-class TestCreation(utils.TestCase):
+class TestFunc(utils.TestCase):
 
     def setUp(self):
 
@@ -44,8 +44,8 @@ class TestCreation(utils.TestCase):
     def test_func3(self):
         INIT(self, 'np.ones((2, 3))')
 
-        def np_ones(args):
-            return AST.Token((len(args), ))
+        def np_ones(dv, node, args, keywords):
+            dv.result[node] = AST.Token((len(args), ))
 
         self.DV.predefinedFunc['np.ones'] = np_ones
 
@@ -56,3 +56,12 @@ class TestCreation(utils.TestCase):
         self.assertDimEqual(self.DV.result[node], AST.Token((1,)))
 
         END()
+
+    def test_np_func(self):
+        INIT(self, 'Existence of my np functions')
+
+        funcs = utils.my_np_func.get_all_func_name()
+
+        self.assertTrue(isinstance(funcs, list))
+        self.assertTrue(len(funcs) > 0)
+        printc(len(funcs), color.CRED)

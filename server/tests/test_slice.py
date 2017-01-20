@@ -1,6 +1,6 @@
 # pylint: disable=R0201, C0103
 
-from .. import utils, color
+from . import utils, color
 import numpy as np
 
 INIT = utils.test_init
