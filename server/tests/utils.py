@@ -1,6 +1,7 @@
 import sys
 import inspect
 from inspect import getouterframes, currentframe
+import unittest
 
 from .. import my_ast
 from .color import CWHITE, CRED2, CEND
@@ -24,3 +25,8 @@ def test_init(ctx=None, t=''):
 
 def test_end():
     print('')
+
+class TestCase(unittest.TestCase):
+    def assertDimEqual(self, first, second, msg=None):
+        assertion_func = self._getAssertEqualityFunc(first.dim, second.dim)
+        assertion_func(first.dim, second.dim, msg=msg)

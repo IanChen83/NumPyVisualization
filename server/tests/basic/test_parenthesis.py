@@ -1,6 +1,5 @@
 # pylint: disable=R0201, C0103
 
-import unittest
 from .. import utils, color
 
 INIT = utils.test_init
@@ -10,7 +9,7 @@ AST = utils.my_ast
 printc = utils.printc
 
 
-class TestParenthesis(unittest.TestCase):
+class TestParenthesis(utils.TestCase):
 
     def setUp(self):
         self.DV = AST.DimensionVisitor()
@@ -20,11 +19,11 @@ class TestParenthesis(unittest.TestCase):
 
         node = AST.parse('(a)')
         self.DV.visit(node)
-        self.assertEqual(self.DV.result[node], (tuple([1]), 'Num'))
+        self.assertDimEqual(self.DV.result[node], AST.Token())
 
         END()
 
-    def test_two_name(self):
+    def test_two_names(self):
         INIT(self, '(a + b)')
 
         node = AST.parse('(a + b)')
