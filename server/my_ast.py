@@ -1,6 +1,7 @@
 # pylint: disable=R0201, C0103
 
 import ast
+import math
 from copy import deepcopy
 
 class Token:
@@ -13,6 +14,15 @@ class Token:
 
 def parse(t):
     return ast.parse(t, mode='eval').body
+
+
+def get_func_name(func):
+    if isinstance(func, ast.Name):
+        return func.id
+    elif isinstance(func, ast.Attribute):
+        return '{0}.{1}'.format(get_func_name(func.value), func.attr)
+    else:
+        raise NotImplementedError('Unknown object with type {0}'.format(type(func)))
 
 
 def check_compatible_dimension(a, b):
@@ -28,37 +38,60 @@ def check_compatible_dimension(a, b):
 
 
 def binary_merge_dimension(left, right):
-    if not check_compatible_dimension(left.dim, right.dim):
+    if not check_compatible_dimension(left, right):
         raise ValueError('Incompatible dimensions for {0} and {1}'.format(left, right))
 
-    x, y = list(left.dim), list(right.dim)
+    x, y = list(left), list(right)
     if len(x) > len(y):
         y = [0] * (len(x) - len(y)) + y
     elif len(y) > len(x):
         x = [0] * (len(y) - len(x)) + x
     merged = tuple(max(*p) for p in zip(x, y))
 
-    token = Token(dim=merged)
-
-    return token
+    return merged
 
 
-def slice_dimension(token, s):
+def slice_dimension(dim, s):
     if isinstance(s, ast.Index):
         if isinstance(s.value, ast.Num):
-            return Token(token.dim[:-1])
+            return dim[1:]
         elif isinstance(s.value, ast.Ellipsis):
-            return Token(token.dim[:])
+            return dim[:]
         raise NotImplementedError('Index cannot contain object other than number')
     elif isinstance(s, ast.Slice):
-        pass
+        lower, upper, step = 0, dim[0], 1
+        if not isinstance(s.lower, ast.Num):
+            if s.lower is not None:
+                raise NotImplementedError('Slice lower contain object other than number')
+        else:
+            lower = s.lower.n if s.lower.n > 0 else s.lower.n + dim[0]
+        if not isinstance(s.upper, ast.Num):
+            if s.upper is not None:
+                raise NotImplementedError('Slice upper contain object other than number')
+        else:
+            upper = s.upper.n if s.upper.n > 0 else s.upper.n + dim[0]
+        if not isinstance(s.step, ast.Num):
+            if s.step is not None:
+                raise NotImplementedError('Slice lower contain object other than number')
+        else:
+            step = s.step.n if s.step.n > 0 else 10
+
+        if upper <= lower:
+            raise ValueError('Slice upper <= lower')
+        return (math.ceil((upper - lower) / step),) + dim[1:]
     elif isinstance(s, ast.ExtSlice):
-        pass
-
-
+        ret = list(dim)
+        for i, x in enumerate(s.dims):
+            if isinstance(x, ast.Index):
+                ret[i] = 0
+            elif isinstance(x, ast.Slice):
+                ret[i] = slice_dimension(tuple(ret[i:]), x)[0]
+            elif isinstance(x, ast.ExtSlice):
+                raise NotImplementedError('ExtSlice cannot contain Ellipsis')
+        return tuple(filter(lambda x: x != 0, ret))
 
 class DimensionVisitor(ast.NodeVisitor):
-    def __init__(self, predefined=None):
+    def __init__(self, predefined=None, predefinedFunc=None):
         super(DimensionVisitor, self).__init__()
 
         self.result = dict()
@@ -66,6 +99,10 @@ class DimensionVisitor(ast.NodeVisitor):
             self.predefined = dict()
         else:
             self.predefined = predefined
+        if not predefinedFunc:
+            self.predefinedFunc = dict()
+        else:
+            self.predefinedFunc = predefinedFunc
 
     def visit_Num(self, node):
         if node not in self.result:
@@ -84,7 +121,7 @@ class DimensionVisitor(ast.NodeVisitor):
             left = self.result[node.left]
             right = self.result[node.right]
             if isinstance(left, Token) and isinstance(right, Token):
-                self.result[node] = binary_merge_dimension(left, right)
+                self.result[node] = Token(binary_merge_dimension(left.dim, right.dim))
             else:
                 raise ValueError(
                     'BinOp has wrong node with type {0} & {1}'.format(type(left), type(right))
@@ -104,4 +141,16 @@ class DimensionVisitor(ast.NodeVisitor):
                 raise ValueError('Object with type {0} is not subscriptable'.format(type(value)))
             elif len(value.dim) == 0:
                 raise ValueError('Token has 0 dimension')
-            self.result[node] = slice_dimension(value, node.slice)
+            self.result[node] = Token(slice_dimension(value.dim, node.slice))
+
+    def visit_Call(self, node):
+        if node not in self.result:
+            self.generic_visit(node)
+            func_name = get_func_name(node.func)
+
+            if func_name not in self.predefinedFunc:
+                raise NotImplementedError(
+                    'This function \'{0}\' is not implemented'.format(func_name)
+                )
+            else:
+                self.result[node] = self.predefinedFunc[func_name](node.args)

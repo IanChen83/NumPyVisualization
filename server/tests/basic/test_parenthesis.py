@@ -27,7 +27,7 @@ class TestParenthesis(utils.TestCase):
         INIT(self, '(a + b)')
 
         node = AST.parse('(a + b)')
-        printc(AST.ast.dump(node), color.CBLUE)
+        # printc(AST.ast.dump(node), color.CBLUE)
         self.DV.visit(node)
 
         END()

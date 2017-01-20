@@ -1,6 +1,7 @@
 # pylint: disable=R0201, C0103
 
 from .. import utils, color
+import numpy as np
 
 INIT = utils.test_init
 END = utils.test_end
@@ -33,7 +34,7 @@ class TestSlice(utils.TestCase):
         node = AST.parse('a[2]')
         self.DV.visit(node)
 
-        self.assertDimEqual(self.DV.result[node], AST.Token((3, )))
+        self.assertDimEqual(self.DV.result[node], AST.Token((4, )))
 
         END()
 
@@ -41,7 +42,7 @@ class TestSlice(utils.TestCase):
         INIT(self, 'a[2][3]')
 
         node = AST.parse('a[2][3]')
-        printc(AST.ast.dump(node), color.CBLUE)
+        # printc(AST.ast.dump(node), color.CBLUE)
         self.DV.visit(node)
         # Subscript(
         #   value=Subscript(
@@ -60,7 +61,7 @@ class TestSlice(utils.TestCase):
         INIT(self, 'a[...]')
 
         node = AST.parse('a[...]')
-        printc(AST.ast.dump(node), color.CBLUE)
+        # printc(AST.ast.dump(node), color.CBLUE)
         self.DV.visit(node)
 
         # self.assertEqual(self.DV.result[node], (tuple([1]), 'number'))
@@ -72,19 +73,34 @@ class TestSlice(utils.TestCase):
 
         node = AST.parse('a[2:3]')
         self.DV.visit(node)
-        printc(AST.ast.dump(node), color.CBLUE)
+        # printc(AST.ast.dump(node), color.CBLUE)
 
-        # self.assertEqual(self.DV.result[node], (tuple([1]), 'number'))
+        self.assertDimEqual(self.DV.result[node], AST.Token((1, 4)))
 
         END()
 
-    def test_ext_slice(self):
+    def test_ext_slice1(self):
         INIT(self, 'a[2:3, 2]')
 
         node = AST.parse('a[2:3, 2]')
         self.DV.visit(node)
-        printc(AST.ast.dump(node), color.CBLUE)
+        # printc(AST.ast.dump(node), color.CBLUE)
 
-        # self.assertEqual(self.DV.result[node], (tuple([1]), 'number'))
+        self.assertDimEqual(self.DV.result[node], AST.Token((1, )))
+
+        END()
+
+    def test_ext_slice2(self):
+        INIT(self, '(3, 5, 5, 2)[2:3, 2, 1:2]')
+
+        self.DV.predefined['b'] = AST.Token((3, 5, 5, 2))
+
+        b = np.ones((3, 5, 5, 2))
+
+        node = AST.parse('b[2:3, 2, 1:2]')
+        self.DV.visit(node)
+        # printc(AST.ast.dump(node), color.CBLUE)
+
+        self.assertDimEqual(self.DV.result[node], AST.Token(b[2:3, 2, 1:2].shape))
 
         END()
