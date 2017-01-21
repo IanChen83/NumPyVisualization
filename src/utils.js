@@ -59,9 +59,26 @@ function goToUrl(url) {
 	return() => window.open(url);
 }
 
+function isNaturalNum(value) {
+	// console.log(value);
+	if (value.replace(/ /gi, '')[0] === '0') {
+		return false;
+	}
+
+	let x;
+	if (isNaN(value)) {
+		return false;
+	}
+
+	x = parseFloat(value);
+
+	return (x | 0) === x;
+}
+
 export {
 	goToPage,
 	goToUrl,
 	queryToHash,
 	hashToQuery,
+	isNaturalNum,
 };

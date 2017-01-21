@@ -2,6 +2,8 @@ import React from 'react';
 import { Segment, Header, Grid, Table, Button, Input, Icon } from 'semantic-ui-react';
 import CodeMirror from 'react-codemirror';
 
+import { isNaturalNum } from './../utils';
+
 export default class VisUIPage extends React.Component {
 	constructor(props) {
 		super(props);
@@ -17,8 +19,9 @@ export default class VisUIPage extends React.Component {
 		this.onArrNameChange = this.onArrNameChange.bind(this);
 		this.onArrShapeChange = this.onArrShapeChange.bind(this);
 		// this.onNpCmdChange = this.onNpCmdChange.bind(this);
-		this.addNewArr = this.addNewArr.bind(this);
-		this.runVisualize = this.runVisualize.bind(this);
+		this.onClickAddNewArr = this.onClickAddNewArr.bind(this);
+		this.onClickVisualize = this.onClickVisualize.bind(this);
+		this.arrCheckValid = this.arrCheckValid.bind(this);
 	}
 
 	// onNpCmdChange(npCmdScript) {
@@ -38,59 +41,75 @@ export default class VisUIPage extends React.Component {
 		this.setState({ curArrShape: e.target.value });
 	}
 
-	addNewArr() {
+	arrCheckValid(arrList, curArrName, curArrShape) {
+		if (curArrShape[0] !== '(' || curArrShape[(curArrShape.length - 1)] !== ')') {
+			return 0;
+		} else {
+			const shapeSplitByComma = curArrShape.substr(1, curArrShape.length - 2).split(',');
+			// console.log(shapeSplitByComma);
+			if (!(shapeSplitByComma.length === 2 && isNaturalNum(shapeSplitByComma[0])
+			 && shapeSplitByComma[1].trim() === '')) {
+				for (let i = 0; i < shapeSplitByComma.length; ++i) {
+					if (!isNaturalNum(shapeSplitByComma[i])) {
+						return 0;
+					}
+				}
+			}
+		}
+
+		// console.log(arrList.length);
+
+		for (let i = 0; i < arrList.length; ++i) {
+			if (arrList[i].name === curArrName) {
+				if (arrList[i].shape === curArrShape) {
+					return 1;
+				} else {
+					return (i + 3);
+				}
+			}
+		}
+
+		return 2;
+	}
+
+	onClickAddNewArr() {
 		// console.warn("Not implemented yet...")
 		const { curArrName, curArrShape, arrList } = this.state;
-		if (curArrName !== '' && curArrShape !== '') {
-			console.log(arrList);
-			const newArrList = [...arrList, {name: curArrName, shape: curArrShape}];
-			this.setState({ arrList: newArrList });
+
+		const caseIdx = this.arrCheckValid(arrList, curArrName, curArrShape);
+		// console.log(caseIdx);
+		switch(caseIdx) {
+			case 0:
+				alert('Shape specification is wrong...');
+				break;
+			case 1:
+				alert('An array with same name and shape has already been declared.')
+				break;
+			case 2:
+				const newArrList = [...arrList, {name: curArrName, shape: curArrShape.replace(/ /gi, '')}];
+				this.setState({ arrList: newArrList });
+				break;
+			default:
+				if (confirm('This array\'s name exsit, will overwrite the value if you click yes.')) {
+					let newArrList = arrList;
+					// console.log(newArrList[caseIdx]);
+					newArrList[(caseIdx - 3)].shape = curArrShape.replace(/ /gi, '');
+					this.setState({ arrList: newArrList });
+				}
+				break;
 		}
 	}
 
-	// removeArr(e, idx) {
-	// 	console.log(e, idx);
-	// }
-
-	runVisualize() {
+	onClickVisualize() {
 		console.warn("Not implemented yet...");
 	}
-
-	// renderNpCmdScript() {
-	// 	const options = {
-	// 		mode: 'python',
-	// 		indentUnit: 4,
-	// 		lineNumbers: true,
-	// 	};
-
-	// 	const style = {
-	// 		marginTop: 2,
-	// 		borderRadius: 4,
-	// 		border: 'solid 1px rgba(0, 0, 0, 0.298039)',
-	// 	};
-
-	// 	return (
-	// 		<div>
-	// 			<div style={ style }>
-	// 				<CodeMirror
-	// 					value={ this.state.npCmdScript }
-	// 					options={ options }
-	// 					onChange={ this.onNpCmdChange }
-	// 				/>
-	// 			</div>
-	// 			<Button fluid basic positive onClick={this.runVisualize}>
-	// 				visualize
-	// 			</Button>
-	// 		</div>
-	// 	);
-	// }
 
 	renderBtn(content, onClickFunc, icon='world') {
 		return (
 			<Button
 				fluid basic positive
 				icon={ `${icon}` } labelPosition='right'
-				style={{ textAlign:'left', height: '10%' }}
+				style={{ textAlign:'left', height: '8%' }}
 				onClick={ onClickFunc }
 				content = { `${content}` }
 			>
@@ -160,7 +179,7 @@ export default class VisUIPage extends React.Component {
 			<div style={{ fontSize: '20px'}}>
 				{'Command :'}
 				<Input
-					transparent placeholder="type here..."
+					transparent placeholder="type command here..."
 					style={{ borderBottom: '1px solid black', fontSize: '15px', width: '70%' }}
 					onChange={ this.onNpCmdChange }
 				>
@@ -188,7 +207,7 @@ export default class VisUIPage extends React.Component {
 						<Grid.Column width={3}>
 							{ this.renderInitArr('name...', this.onArrNameChange, this.state.curArrName) }
 							{ this.renderInitArr('shape...', this.onArrShapeChange, this.state.curArrShape) }
-							{ this.renderBtn('add', this.addNewArr, 'add circle') }
+							{ this.renderBtn('add', this.onClickAddNewArr, 'add circle') }
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row>
@@ -198,7 +217,7 @@ export default class VisUIPage extends React.Component {
 							</Segment>
 						</Grid.Column>
 						<Grid.Column width={3}>
-							{ this.renderBtn('visualize', this.runVisualize, 'video play') }
+							{ this.renderBtn('visualize', this.onClickVisualize, 'video play') }
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row style={{ textAlign: 'left' }}>
@@ -213,7 +232,3 @@ export default class VisUIPage extends React.Component {
 		);
 	}
 }
-
-// <Grid.Column width={6}>
-	 // {this.renderNpCmdScript()}
-// </Grid.Column>
