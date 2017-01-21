@@ -85,6 +85,7 @@ class TestBinaryOperation(utils.TestCase):
 
         node = AST.parse('2 + 3')
         self.DV.visit(node)
+        printc(AST.ast.dump(node), color.CBLUE)
         self.assertDimEqual(self.DV.result[node], AST.Token())
 
         END()
