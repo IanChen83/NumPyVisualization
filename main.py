@@ -29,6 +29,7 @@ def DFS(token ,level=0):
         ret['identifier'] = token.identifier
         ret['col_s'] = token.col_s
         ret['col_e'] = token.col_e
+        ret['dim'] = token.dim
         ret['children'] = [DFS(x, level + 1) for x in token.children]
     elif isinstance(token, tuple):
         ret['type'] = 'tuple'
