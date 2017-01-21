@@ -1,5 +1,5 @@
 {
-  "name": "numpy-visualization",
+  "name": "Termi",
   "version": "0.1.0",
   "description": "Termi is a website to customize your most used command line tools",
   "license": "GPL-3.0",
@@ -21,6 +21,8 @@
     "codemirror": "^5.22.0",
     "css-loader": "^0.26.1",
     "express": "^4.14.0",
+    "html-loader": "^0.4.4",
+    "marked": "^0.3.6",
     "react": "^15.3.2",
     "react-addons-update": "^15.4.1",
     "react-codemirror": "^0.3.0",
@@ -28,6 +30,7 @@
     "sanitize-html": "^1.13.0",
     "semantic-ui-css": "^2.2.4",
     "semantic-ui-react": "^0.62.0",
+    "spawn-args": "^0.2.0",
     "style-loader": "^0.13.1"
   },
   "devDependencies": {
