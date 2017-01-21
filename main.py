@@ -56,10 +56,20 @@ def parse_ast():
     DV.result = result
     LV.result = result
 
-    DV.visit(node)
-    LV.visit(node)
+    try:
+        DV.visit(node)
+        LV.visit(node)
+        ret = dict({
+            'status': 'ok',
+            'result': DFS(result[node])
+        })
+    except Exception as e:
+        ret = dict({
+            'status': 'failed',
+            'result': str(e)
+        })
 
-    return json.dumps(DFS(result[node]))
+    return json.dumps(ret)
 
 if __name__ == "__main__":
     app.run()
