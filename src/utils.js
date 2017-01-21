@@ -61,6 +61,11 @@ function goToUrl(url) {
 
 function isNaturalNum(value) {
 	// console.log(value);
+
+	if (value.indexOf('.') !== -1) {
+		return false;
+	}
+
 	if (value.replace(/ /gi, '')[0] === '0') {
 		return false;
 	}
