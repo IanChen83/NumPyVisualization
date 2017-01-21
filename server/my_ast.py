@@ -2,19 +2,31 @@
 
 import ast
 import math
+import asttokens
 from copy import deepcopy
 
+__all__ = [
+    'Token',
+    'parse',
+    'DimensionVisitor',
+    'LocationVisitor'
+]
+
 class Token:
-    def __init__(self, dim=None, children=None, start=-1, end=-1):
-        self.col_s = start
-        self.col_e = end
-        self._children = children if children is not None else []
+    def __init__(self, dim=None):
+        self.col_s = -1
+        self.col_e = -1
+        self.identifier = ''
+        self.children = []
         self.dim = dim if dim is not None else tuple([])
 
 
 def parse(t):
-    return ast.parse(t, mode='eval').body
+    atok = asttokens.ASTTokens(t)
+    root = ast.parse(t, mode='eval')
+    atok.mark_tokens(root)
 
+    return root.body
 
 def get_func_name(func):
     if isinstance(func, ast.Name):
@@ -78,7 +90,7 @@ def slice_dimension(dim, s):
 
         if upper <= lower:
             raise ValueError('Slice upper <= lower')
-        return (math.ceil((upper - lower) / step),) + dim[1:]
+        return (int(math.ceil((upper - lower) / step)),) + dim[1:]
     elif isinstance(s, ast.ExtSlice):
         ret = list(dim)
         for i, x in enumerate(s.dims):
@@ -91,18 +103,12 @@ def slice_dimension(dim, s):
         return tuple(filter(lambda x: x != 0, ret))
 
 class DimensionVisitor(ast.NodeVisitor):
-    def __init__(self, predefined=None, predefinedFunc=None):
+    def __init__(self, result=None, predefined=None, predefinedFunc=None):
         super(DimensionVisitor, self).__init__()
 
-        self.result = dict()
-        if not predefined:
-            self.predefined = dict()
-        else:
-            self.predefined = predefined
-        if not predefinedFunc:
-            self.predefinedFunc = dict()
-        else:
-            self.predefinedFunc = predefinedFunc
+        self.result = result if result is not None else dict()
+        self.predefined = predefined if predefined is not None else dict()
+        self.predefinedFunc = predefinedFunc if predefinedFunc is not None else dict()
 
     def visit_Num(self, node):
         if node not in self.result:
@@ -158,8 +164,57 @@ class DimensionVisitor(ast.NodeVisitor):
     def visit_Tuple(self, node):
         if node not in self.result:
             self.generic_visit(node)
+            ret = []
             for d in node.elts:
-                if not isinstance(d, ast.Num):
-                    return
-                    # raise NotImplementedError('Tuple should have elements of type number')
-            self.result[node] = tuple([d.n for d in node.elts])
+                if isinstance(d, ast.Num):
+                    ret.append(d.n)
+                if isinstance(d, ast.UnaryOp):  # for negative numbers
+                    if isinstance(d.op, ast.USub) and isinstance(d.operand, ast.Num):
+                        ret.append(-d.operand.n)
+            self.result[node] = tuple(ret)
+
+
+class LocationVisitor(ast.NodeVisitor):
+    def __init__(self, result=None, predefined=None, predefinedFunc=None):
+        super(LocationVisitor, self).__init__()
+
+        self.result = result if result is not None else dict()
+        self.predefined = predefined if predefined is not None else dict()
+        self.predefinedFunc = predefinedFunc if predefinedFunc is not None else dict()
+
+    def visit_Call(self, node):
+        self.generic_visit(node)
+        self.result[node].identifier = 'Call:{0}'.format(get_func_name(node.func))
+        self.result[node].children += [self.result[x] for x in node.args]
+        self.result[node].children += [self.result[x] for x in node.keywords]
+
+    def visit_Subscript(self, node):
+        self.generic_visit(node)
+        self.result[node].identifier = 'Subscript'
+        self.result[node].children.append(self.result[node.value])
+
+    def visit_BinOp(self, node):
+        self.generic_visit(node)
+        # Add | Sub | Mult | Div | Mod | Pow
+        self.result[node].identifier = type(node.op)
+        self.result[node].children.append(self.result[node.left])
+        self.result[node].children.append(self.result[node.right])
+
+    def visit_UnaryOp(self, node):
+        self.generic_visit(node)
+        # Invert | Not | UAdd | USub
+        self.result[node].identifier = type(node.op)
+        self.result[node].children.append(self.result[node.operand])
+
+    def visit_Name(self, node):
+        self.generic_visit(node)
+        self.result[node].identifier = 'Name:{0}'.format(node.id)
+
+    def visit(self, node):
+        if node in self.result and isinstance(self.result[node], Token):
+            self.result[node].col_s = node.first_token.startpos
+            self.result[node].col_e = node.last_token.endpos
+
+        method = 'visit_' + node.__class__.__name__
+        visitor = getattr(self, method, self.generic_visit)
+        return visitor(node)

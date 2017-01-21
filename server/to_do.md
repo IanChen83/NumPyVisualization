@@ -69,6 +69,6 @@ It's not difficult to caculate the dimention of the output array.
 
 #### Joining Arrays
 
-* **np.concatenate((a1, a2, ...)[, axis])**
+* np.concatenate((a1, a2, ...)[, axis])
   Output shape: *Dependent on a1, a2, ...*
 
