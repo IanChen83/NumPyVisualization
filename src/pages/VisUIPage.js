@@ -16,6 +16,7 @@ export default class VisUIPage extends React.Component {
 			arrList: [],
 			npCmd: '',
 			displayNode: [],
+			timeStep: -1,
 		};
 
 		this.onNpCmdChange = this.onNpCmdChange.bind(this);
@@ -147,6 +148,7 @@ export default class VisUIPage extends React.Component {
 					const rootNode = nodeObj.result;
 					let displayNode = displayNodeDFS(rootNode.children);
 					displayNode.push(rootNode);
+					this.setState({ displayNode: displayNode, timeStep: 0 });
 					console.log(displayNode);
 				}
 			})
@@ -244,12 +246,35 @@ export default class VisUIPage extends React.Component {
 		);
 	}
 
+	renderSVG() {
+		const { displayNode, timeStep } = this.state;
+		return <SVG xxx={ displayNode[timeStep] }/>
+	}
+
 	renderVisualization() {
-		return "!!"
+		// console.warn("Not implemented yet...");
+		const { timeStep, displayNode } = this.state;
+
+		if (timeStep === -1) {
+			return null;
+		}
+
+		this.setState({ timeStep: (timeStep + 1) });
+
+		if (timeStep === displayNode.length) {
+			this.setState({ timeStep: 0 }); // reset timeStep
+			return null;
+		}
+		
+		if (timeStep !== 0) {
+			timeoutID = window.setTimeout(this.renderSVG, 5000);
+		} else {
+			return this.renderSVG();
+		}
 	}
 
 	render() {
-		return(
+		return (
 			<div>
 				<Grid divided style={{ margin: 0 }}>
 					<Grid.Row>
