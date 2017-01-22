@@ -1,5 +1,6 @@
 import React from 'react';
 import NewArray from './NewArray';
+import CopyArray from './CopyArray';
 
 const OnesStyle = {
     fill: '#E29BD7',
@@ -40,10 +41,26 @@ const NameObject = {
     obj: <NewArray id="nameObject" style={NameStyle} />,
 };
 
+const IdentityObject = {
+    helpTitle: 'np.identity(n)',
+    helpMessage: [
+        'Return the identity array.',
+        'The identity array is a square array with ones on the main diagonal.',
+    ],
+    obj: <NewArray id="identityObject" style={OnesStyle} mode="identity" rectNumber={[4, 4]} rectSize={75} />,
+};
+
+const OnesLikeObject = {
+    helpTitle: 'np.ones_like(arr)',
+    helpMessage: ['Return an array of ones with the same shape and type as a given array.'],
+    obj: <CopyArray id="oneslikeObject" style={OnesStyle} />,
+};
 
 const Animations = {
     'np.ones': OnesObject,
     'np.zeros': ZerosObject,
+    'np.identity': IdentityObject,
+    'np.ones_like': OnesLikeObject,
     name: NameObject,
 };
 

@@ -45,7 +45,7 @@ It's not difficult to caculate the dimention of the output array.
 
 #### Building Matrices
 
-* **np.diag(v[, k])**
+* np.diag(v[, k])
 * **np.tril(m, [, k])**
 * **np.triu(m, [, k])**
 

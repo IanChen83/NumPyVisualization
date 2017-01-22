@@ -257,9 +257,10 @@ export default class VisUIPage extends React.Component {
 
 	incrementTimeStep() {
 		const { timeStep, displayNode } = this.state;
+		console.log(timeStep);
 
 		if (timeStep === -1 || timeStep === displayNode.length - 1) return;
-
+		this.setState({timeStep: timeStep + 1});
 		setTimeout(this.incrementTimeStep, 5000);
 	}
 

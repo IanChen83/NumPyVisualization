@@ -35,7 +35,7 @@ export default class SVG extends React.Component {
         this.state = {
             step: 0,
         };
-        this.helpMessageWidth = 500;
+        this.helpMessageWidth = 450;
         this.updateDimensions = this.updateDimensions.bind(this);
     }
 
@@ -68,7 +68,7 @@ export default class SVG extends React.Component {
     }
 
     render() {
-        const width = this.state.screenWidth * 0.7;
+        const width = this.state.screenWidth * 0.73;
         const renderObject = this.getRenderObject();
         return(
             <svg id={this.props.id} width={width} height={this.props.height}>
@@ -76,7 +76,7 @@ export default class SVG extends React.Component {
                     {renderObject.obj}
                 </g>
                 <g transform={`translate(${width - this.helpMessageWidth}, 0)`}>
-                    <rect x="0" y="0" width={this.helpMessageWidth} height={this.props.height} style={{ fill: 'white' }} />
+                    <rect x="0" y="0" width={this.helpMessageWidth} height={this.props.height} style={{ fill: 'white', opacity: 0.5 }} />
                     <foreignObject id="foo" height={this.props.height} width={this.helpMessageWidth} y="0" x="0">
                         <div xmlns="http://www.w3.org/1999/xhtml" className="SVGMessage" id={`${this.props.id}Message`}>
                             <h1>{renderObject.helpTitle}</h1>
@@ -107,6 +107,6 @@ SVG.defaultProps = {
             type: 'tuple',
             value: '(2, 3)',
         }],
-        identifier: 'Call:np.ones',
+        identifier: 'Call:np.ones_like',
     },
 };

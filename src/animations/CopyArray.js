@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 const d3 = require('d3');
 
-class NewArray extends Component {
+class CopyArray extends Component {
     constructor(props) {
         super(props);
         this.array = [];
@@ -39,58 +39,54 @@ class NewArray extends Component {
         this.svg = d3.select(`#${this.props.id}${this.state.id}`);
 
 
-        this.svg.selectAll('rect')
+        this.svg.append('g')
+            .selectAll('rect')
             .data(data)
             .enter()
             .append('rect')
-            .attr('width', 0)
-            .attr('height', 0)
+            .attr('width', size)
+            .attr('height', size)
             .attr('x', d => d[1])
             .attr('y', d => d[2])
-            .attr('fill', style.fill)
+            .attr('stroke', 'transparent')
             .attr('stroke-width', 2)
-            .attr('stroke', style.stroke)
+            .attr('fill', style.fill)
             .attr('rx', 5)
             .attr('ry', 5)
             .exit();
 
-        this.svg.selectAll('rect')
-            .transition()
-            .delay((d, i) => i * 30)
-            .duration(1000)
+        const rect2 = this.svg.append('g');
+        rect2.selectAll('rect')
+            .data(data)
+            .enter()
+            .append('rect')
             .attr('width', size)
             .attr('height', size)
-            .ease(d3.easeCircleOut);
+            .attr('x', d => d[1])
+            .attr('y', d => d[2])
+            .attr('stroke', style.stroke)
+            .attr('stroke-width', 2)
+            .attr('fill', 'transparent')
+            .attr('rx', 5)
+            .attr('ry', 5)
+            .exit();
 
-        if(this.props.mode === '0' || this.props.mode === '1') {
-            this.svg.selectAll('text')
-                .data(data)
-                .enter()
-                .append('text')
-                .attr('x', d => d[1])
-                .attr('y', d => d[2])
-                .attr('transform', 'translate(10, 23)')
-                .attr('font-size', '20px')
-                .text(d => this.props.mode)
-                .exit();
-        } else if(this.props.mode === 'identity') {
-            this.svg.selectAll('text')
-                .data(data)
-                .enter()
-                .append('text')
-                .attr('x', d => d[1])
-                .attr('y', d => d[2])
-                .attr('transform', 'translate(10, 23)')
-                .attr('font-size', (d, i) => ((i % width) === Math.floor(i / width) ? '25px' : '12px'))
-                .text((d, i) => ((i % width) === Math.floor(i / width) ? 1 : 0))
-                .exit();
-        }
+        rect2.selectAll('rect')
+            .transition()
+            .delay((d, i) => (i * 30) + 500)
+            .duration(1500)
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', 0)
+            .attr('height', 0)
+            .ease(d3.easeCircleOut);
     }
 
     remove() {
         if(!this.svg) return;
         this.svg.selectAll('rect').remove();
         this.svg.selectAll('text').remove();
+        this.svg.selectAll('g').remove();
     }
 
     render() {
@@ -105,7 +101,7 @@ class NewArray extends Component {
     }
 }
 
-NewArray.propTypes = {
+CopyArray.propTypes = {
     id: PropTypes.string,
     rectSize: PropTypes.number,
     style: PropTypes.object,    // eslint-disable-line
@@ -113,7 +109,7 @@ NewArray.propTypes = {
     mode: PropTypes.string,
 };
 
-NewArray.defaultProps = {
+CopyArray.defaultProps = {
     rectSize: 100,
     rectNumber: [4, 3],
     mode: '',
@@ -124,4 +120,4 @@ NewArray.defaultProps = {
 };
 
 
-export default NewArray;
+export default CopyArray;
