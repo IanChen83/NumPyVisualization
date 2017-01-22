@@ -27,6 +27,8 @@ export default class VisUIPage extends React.Component {
 		this.onClickVisualize = this.onClickVisualize.bind(this);
 		this.arrCheckValid = this.arrCheckValid.bind(this);
 		this.onClickRmArr = this.onClickRmArr.bind(this);
+
+		this.incrementTimeStep = this.incrementTimeStep.bind(this);
 	}
 
 	// onNpCmdChange(npCmdScript) {
@@ -150,7 +152,7 @@ export default class VisUIPage extends React.Component {
 					displayNode.push(rootNode);
 					this.setState({ displayNode: displayNode, timeStep: 0 });
 					console.log(displayNode);
-					setTimeout(this.incrementTimeStep.bind(this), 5000);
+					setTimeout(this.incrementTimeStep, 5000);
 				}
 			})
 	}
