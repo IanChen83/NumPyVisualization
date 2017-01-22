@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Animations from './animations';
+const d3 = require('d3');
 
 function getWidth() {
     if(self.innerWidth) {
@@ -44,6 +45,12 @@ export default class SVG extends React.Component {
     }
     componentDidMount() {
         window.addEventListener('resize', this.updateDimensions);
+        d3.select(`#${this.props.id}Stage`)
+            .attr('opacity', 0)
+            .transition()
+            .delay(0)
+            .duration(400)
+            .attr('opacity', 1);
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateDimensions);
@@ -55,6 +62,15 @@ export default class SVG extends React.Component {
             screenWidth: getWidth(),
             screenHeight: getHeight(),
         });
+    }
+
+    componentDidUpdate() {
+        d3.select(`#${this.props.id}Stage`)
+            .attr('opacity', 0)
+            .transition()
+            .delay(0)
+            .duration(400)
+            .attr('opacity', 1);
     }
 
     getRenderObject() {
@@ -72,7 +88,7 @@ export default class SVG extends React.Component {
         const renderObject = this.getRenderObject();
         return(
             <svg id={this.props.id} width={width} height={this.props.height}>
-                <g id={`${this.props.id}Stage`} transform={`translate(${(width - this.helpMessageWidth) / 2}, ${this.props.height / 2})`}>
+                <g id={`${this.props.id}Stage`} transform={`translate(${(width - this.helpMessageWidth) / 2}, ${this.props.height / 2})`} opacity={0}>
                     {renderObject.obj}
                 </g>
                 <g transform={`translate(${width - this.helpMessageWidth}, 0)`}>

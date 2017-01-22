@@ -75,10 +75,10 @@ class CopyArray extends Component {
             .transition()
             .delay((d, i) => (i * 30) + 500)
             .duration(1500)
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', 0)
-            .attr('height', 0)
+            .attr('x', d => d[1] - 500)
+            // .attr('y', 0)
+            // .attr('width', 0)
+            // .attr('height', 0)
             .ease(d3.easeCircleOut);
     }
 
