@@ -111,8 +111,8 @@ def DFS(token, level=0):
     return ret
 
 
-@app.route("/", methods=['POST'])
-@crossdomain(origin="localhost")
+@app.route("/", methods=['POST', 'OPTIONS'])
+@crossdomain(origin="http://localhost:3000", headers="Content-Type")
 def parse_ast():
     j = flask.request.get_json()
     predefined = None
