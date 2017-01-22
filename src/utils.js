@@ -98,7 +98,9 @@ function	displayNodeDFS(rootNode) {
 				displayNode.push(subNode);
 			}
 		} else {
-			displayNode = [...displayNode, collectDisplayNode]
+			if (subNode.type === 'array') {
+				displayNode = [...collectDisplayNode, subNode]
+			}
 		}
 	}
 

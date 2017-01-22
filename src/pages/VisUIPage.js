@@ -150,8 +150,8 @@ export default class VisUIPage extends React.Component {
 					const rootNode = nodeObj.result;
 					let displayNode = displayNodeDFS(rootNode.children);
 					displayNode.push(rootNode);
-					this.setState({ displayNode: displayNode, timeStep: 0 });
 					console.log(displayNode);
+					this.setState({ displayNode: displayNode, timeStep: 0 });
 					setTimeout(this.incrementTimeStep, 5000);
 				}
 			})
