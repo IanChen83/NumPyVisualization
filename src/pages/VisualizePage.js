@@ -52,9 +52,6 @@ export default class VisualizePage extends React.Component {
 	render() {
 		return(
 			<Segment style={{ paddingLeft: 0, paddingRight: 0 }}>
-				<Header as="h1" style={{ margin: '15 auto' }}>
-					{'Visualizing a numpy command right now !!'}
-				</Header>
 				{this.renderMenu()}
 				{this.renderSubPage()}
 			</Segment>

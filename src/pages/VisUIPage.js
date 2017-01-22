@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Header, Grid, Table, Button, Input, Icon } from 'semantic-ui-react';
 // import CodeMirror from 'react-codemirror';
-
+import SVG from '../svg';
 import { isNaturalNum, displayNodeDFS } from './../utils';
 
 import MyArray from './../components/MyArray'
@@ -150,6 +150,7 @@ export default class VisUIPage extends React.Component {
 					displayNode.push(rootNode);
 					this.setState({ displayNode: displayNode, timeStep: 0 });
 					console.log(displayNode);
+					setTimeout(this.incrementTimeStep.bind(this), 5000);
 				}
 			})
 	}
@@ -172,7 +173,7 @@ export default class VisUIPage extends React.Component {
 		return (
 			<Segment>
 				<Input
-					transparent placeholder= {`${placeholder}`} 
+					transparent placeholder= {`${placeholder}`}
 					style={{ borderBottom: '1px solid black', fontSize: '15px', width: '100%', height: '5%' }}
 					onChange={ inputOnChange }
 				>
@@ -204,7 +205,7 @@ export default class VisUIPage extends React.Component {
 							shape={ arr.shape }
 							onClickRmArr = { this.onClickRmArr }
 						/>
-					); 
+					);
 				})
 			);
 		}
@@ -248,29 +249,16 @@ export default class VisUIPage extends React.Component {
 
 	renderSVG() {
 		const { displayNode, timeStep } = this.state;
-		return <SVG xxx={ displayNode[timeStep] }/>
+		if(timeStep < 0 || !displayNode) return null;
+		return <SVG currentNode={displayNode[timeStep]} id="svg" />;
 	}
 
-	renderVisualization() {
-		// console.warn("Not implemented yet...");
+	incrementTimeStep() {
 		const { timeStep, displayNode } = this.state;
 
-		if (timeStep === -1) {
-			return null;
-		}
+		if (timeStep === -1 || timeStep === displayNode.length - 1) return;
 
-		this.setState({ timeStep: (timeStep + 1) });
-
-		if (timeStep === displayNode.length) {
-			this.setState({ timeStep: 0 }); // reset timeStep
-			return null;
-		}
-		
-		if (timeStep !== 0) {
-			timeoutID = window.setTimeout(this.renderSVG, 5000);
-		} else {
-			return this.renderSVG();
-		}
+		setTimeout(this.incrementTimeStep, 5000);
 	}
 
 	render() {
@@ -299,9 +287,7 @@ export default class VisUIPage extends React.Component {
 					</Grid.Row>
 					<Grid.Row style={{ textAlign: 'left' }}>
 						<Grid.Column width={16}>
-							<Segment inverted style={{ fontFamily: 'Monospace', whiteSpace: 'pre' }}>
-								{ this.renderVisualization() }
-							</Segment>
+							{this.renderSVG()}
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
