@@ -33,9 +33,6 @@ function getHeight() {
 export default class SVG extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            step: 0,
-        };
         this.helpMessageWidth = 450;
         this.updateDimensions = this.updateDimensions.bind(this);
     }
@@ -73,6 +70,10 @@ export default class SVG extends React.Component {
             .attr('opacity', 1);
     }
 
+    shouldComponentUpdate(nextProps) {
+        return !(nextProps.currentNode === this.props.currentNode);
+    }
+
     getRenderObject() {
         const currentNode = this.props.currentNode;
         if(currentNode.type !== 'array') return null;
@@ -80,6 +81,8 @@ export default class SVG extends React.Component {
             return Animations[currentNode.identifier.split(':')[1]];
         } else if(currentNode.identifier.startsWith('Name:')) {
             return Animations.name;
+        } else if(currentNode.identifier.startsWith('BinOp:')) {
+            return Animations[currentNode.identifier.split(':')[1]];
         }
     }
 
@@ -123,6 +126,6 @@ SVG.defaultProps = {
             type: 'tuple',
             value: '(2, 3)',
         }],
-        identifier: 'Call:np.ones_like',
+        identifier: 'BinOp:Add',
     },
 };
