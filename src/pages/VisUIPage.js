@@ -1,8 +1,10 @@
 import React from 'react';
 import { Segment, Header, Grid, Table, Button, Input, Icon } from 'semantic-ui-react';
-import CodeMirror from 'react-codemirror';
+// import CodeMirror from 'react-codemirror';
 
-import { isNaturalNum } from './../utils';
+import { isNaturalNum, displayNodeDFS } from './../utils';
+
+import MyArray from './../components/MyArray'
 
 export default class VisUIPage extends React.Component {
 	constructor(props) {
@@ -13,6 +15,7 @@ export default class VisUIPage extends React.Component {
 			curArrShape: '',
 			arrList: [],
 			npCmd: '',
+			displayNode: [],
 		};
 
 		this.onNpCmdChange = this.onNpCmdChange.bind(this);
@@ -22,6 +25,7 @@ export default class VisUIPage extends React.Component {
 		this.onClickAddNewArr = this.onClickAddNewArr.bind(this);
 		this.onClickVisualize = this.onClickVisualize.bind(this);
 		this.arrCheckValid = this.arrCheckValid.bind(this);
+		this.onClickRmArr = this.onClickRmArr.bind(this);
 	}
 
 	// onNpCmdChange(npCmdScript) {
@@ -45,7 +49,7 @@ export default class VisUIPage extends React.Component {
 		if (curArrShape[0] !== '(' || curArrShape[(curArrShape.length - 1)] !== ')') {
 			return 0;
 		} else {
-			const shapeSplitByComma = curArrShape.substr(1, curArrShape.length - 2).split(',');
+			const shapeSplitByComma = curArrShape.substr(1, (curArrShape.length - 2)).split(',');
 			// console.log(shapeSplitByComma);
 			if (!(shapeSplitByComma.length === 2 && isNaturalNum(shapeSplitByComma[0])
 			 && shapeSplitByComma[1].trim() === '')) {
@@ -100,10 +104,55 @@ export default class VisUIPage extends React.Component {
 		}
 	}
 
-	onClickVisualize() {
-		console.warn("Not implemented yet...");
+	onClickRmArr(e, arrIdx) {
+		const { arrList } = this.state;
+		let newArrList = arrList;
+		newArrList.splice(arrIdx, 1);
+		this.setState({ arrList: newArrList });
 	}
 
+	onClickVisualize() {
+		var visReqHeaders = new Headers();
+		visReqHeaders.append("Content-Type", "application/json");
+
+		const { arrList, npCmd } = this.state;
+		let visObj = { code: npCmd, predefined: '' }
+		const predefined = arrList.map((arr, i) => {
+			const { name, shape } = arr;
+			const dim = shape.substr(1, (shape.length - 2)).split(',')
+				.map((num, j) => { return parseInt(num); });
+			return ({
+				name: name,
+				type: 'array',
+				dim: dim,
+			});
+		});
+		visObj.predefined = predefined;
+
+		var visReq = {
+			method: 'POST',
+			headers: visReqHeaders,
+			mode: 'cors',
+			cache: 'default',
+			body: JSON.stringify(visObj),
+		};
+
+		fetch('http://127.0.0.1:5000', visReq)
+			.then(res => {
+				return res.json();
+			})
+			.then(nodeObj => {
+				console.log(nodeObj);
+				if (nodeObj.status === 'ok') {
+					const rootNode = nodeObj.result;
+					let displayNode = displayNodeDFS(rootNode.children);
+					displayNode.push(rootNode);
+					console.log(displayNode);
+				}
+			})
+	}
+
+	// =============== rendering ===============
 	renderBtn(content, onClickFunc, icon='world') {
 		return (
 			<Button
@@ -146,11 +195,13 @@ export default class VisUIPage extends React.Component {
 			return (
 				arrList.map((arr, i) => {
 					return (
-						<Table.Row key={i}>
-							<Table.Cell>{ `# ${(i+1)}` }</Table.Cell>
-							<Table.Cell>{ arr.name }</Table.Cell>
-							<Table.Cell>{ arr.shape }</Table.Cell>
-						</Table.Row>
+						<MyArray
+							key={ i }
+							arrIdx={ i }
+							name={ arr.name }
+							shape={ arr.shape }
+							onClickRmArr = { this.onClickRmArr }
+						/>
 					); 
 				})
 			);
@@ -159,12 +210,13 @@ export default class VisUIPage extends React.Component {
 
 	renderArrTable() {
 		return (
-			<Table compact celled>
+			<Table compact celled color='blue'>
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell>Array</Table.HeaderCell>
 						<Table.HeaderCell>Name</Table.HeaderCell>
 						<Table.HeaderCell>Shape</Table.HeaderCell>
+						<Table.HeaderCell />
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>

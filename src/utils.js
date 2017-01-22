@@ -80,10 +80,36 @@ function isNaturalNum(value) {
 	return (x | 0) === x;
 }
 
+function	displayNodeDFS(rootNode) {
+	if (rootNode.length === 0) {
+		return [];
+	}
+	
+	let displayNode = [];
+	for (const subNode of rootNode) {
+		
+		if (subNode.children === undefined) {
+			continue;
+		}
+		
+		const collectDisplayNode = displayNodeDFS(subNode.children);
+		if (collectDisplayNode.length === 0) {
+			if (subNode.type === 'array') {
+				displayNode.push(subNode);
+			}
+		} else {
+			displayNode = [...displayNode, collectDisplayNode]
+		}
+	}
+
+	return displayNode
+}
+
 export {
 	goToPage,
 	goToUrl,
 	queryToHash,
 	hashToQuery,
 	isNaturalNum,
+	displayNodeDFS,
 };

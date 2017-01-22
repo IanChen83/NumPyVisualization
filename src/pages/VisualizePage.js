@@ -8,27 +8,13 @@ export default class VisualizePage extends React.Component {
 	constructor(props) {
 		super(props);
 
-		const query = hashToQuery(window.location.hash);
+		// const query = hashToQuery(window.location.hash);
 
 		this.state = {
-			visCmd: query.query.target || '',
+			// visCmd: query.query.target || '',
 			displayPage: 'visUsage',
 		};
-
-		// this.onInputChange = this.onInputChange.bind(this);
 	}
-
-	// onInputChange(e) {
-	// 	this.setState({ visCmd: e.target.value });
-	// }
-
-	// isSupportedvisCmd(visCmd) {
-	// 	if(visCmd === 'ls' || visCmd === 'find') {
-	// 		return true;
-	// 	}
-
-	// 	return false;
-	// }
 
 	renderMenu() {
 
@@ -42,8 +28,7 @@ export default class VisualizePage extends React.Component {
 
 		return(
 			<Menu secondary pointing style={{ borderRadius: 0, marginBottom: 0 }} color="blue">
-				{
-					menuItems.map((v, i) =>
+				{ menuItems.map((v, i) =>
 						<Menu.Item
 						  name={v.name}
 						  onClick={() => this.setState({ displayPage: v.name })}
@@ -58,9 +43,9 @@ export default class VisualizePage extends React.Component {
 
 	renderSubPage() {
 		if(this.state.displayPage === 'visUsage') {
-			return <VisUsagePage visCmd={this.state.visCmd} />;
+			return <VisUsagePage />;
 		} else if(this.state.displayPage === 'visUI') {
-			return <VisUIPage visCmd={this.state.visCmd} />;
+			return <VisUIPage />;
 		}
 	}
 
