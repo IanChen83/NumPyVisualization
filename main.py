@@ -1,14 +1,41 @@
-import flask
 import json
-from html import escape, unescape
+import flask
+from pymongo import MongoClient
+
 import server.my_ast  as AST
 import server.my_np_func as np_func
+
 app = flask.Flask(__name__)
 
 all_func_dict = dict()
 for func_name in np_func.get_all_func_name():
     x = func_name.replace('_', '.').replace('..', '_')
     all_func_dict[x] = getattr(np_func, func_name)
+
+def get_mongo_conn(env):            #TODO: Not tested
+    config = json.loads(''.join(line.rstrip() for line in open(env)))
+    if 'dbloc' not in config or 'dbname' not in config:
+        raise ValueError('Config insufficient. dbloc and dbname required.')
+    client = MongoClient('mongodb://{0}'.format(config['dbloc']))
+
+    db = client[config['dbname']]
+
+    return db['record']
+
+
+def insert_record(conn, record):    #TODO: Not tested
+    r = []
+    for node in record:
+        if isinstance(node, AST.Token) and node.identifier.startswith('Call:'):
+            r.append(dict({
+                'identifier': node.identifier.split(':')[1],
+                'dim': node.dim
+            }))
+    try:
+        conn.insert_one({'nodes': r})
+    except Exception as e:
+        pass
+
 
 def get_predefined(p):
     ret = dict()
@@ -22,7 +49,8 @@ def get_predefined(p):
 
     return ret
 
-def DFS(token ,level=0):
+
+def DFS(token, level=0):
     ret = dict()
     if isinstance(token, AST.Token):
         ret['type'] = 'array'
@@ -60,6 +88,7 @@ def parse_ast():
     try:
         DV.visit(node)
         LV.visit(node)
+        # insert_record(result)
         ret = dict({
             'status': 'ok',
             'result': DFS(result[node])
