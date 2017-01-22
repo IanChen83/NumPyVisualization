@@ -1,6 +1,7 @@
 import React from 'react';
 import NewArray from './NewArray';
 import CopyArray from './CopyArray';
+import BroadcastArray from './BroadcastArray';
 
 const OnesStyle = {
     fill: '#E29BD7',
@@ -53,7 +54,19 @@ const IdentityObject = {
 const OnesLikeObject = {
     helpTitle: 'np.ones_like(arr)',
     helpMessage: ['Return an array of ones with the same shape and type as a given array.'],
-    obj: <CopyArray id="oneslikeObject" style={OnesStyle} />,
+    obj: <CopyArray id="oneslikeObject" style={OnesStyle} mode="1" />,
+};
+
+const ZerosLikeObject = {
+    helpTitle: 'np.zeros_like(arr)',
+    helpMessage: ['Return an array of zeros with the same shape and type as a given array.'],
+    obj: <CopyArray id="zeroslikeObject" style={ZerosStyle} mode="0" />,
+};
+
+const BroadcastObject = {
+    helpTitle: 'Broadcasting Operation',
+    helpMessage: ['Broadcasting will happen during binary Operations like adding or multiplying, providing the two arrays have different shape.'],
+    obj: <BroadcastArray id="broadcastArray" />,
 };
 
 const Animations = {
@@ -61,7 +74,9 @@ const Animations = {
     'np.zeros': ZerosObject,
     'np.identity': IdentityObject,
     'np.ones_like': OnesLikeObject,
+    'np.zeros_like': ZerosLikeObject,
     name: NameObject,
+    Add: BroadcastObject,
 };
 
 export default Animations;

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 const d3 = require('d3');
 
-class CopyArray extends Component {
+class BroadcastArray extends Component {
     constructor(props) {
         super(props);
         this.array = [];
@@ -39,46 +39,27 @@ class CopyArray extends Component {
         this.svg = d3.select(`#${this.props.id}${this.state.id}`);
 
 
-        this.svg.append('g')
-            .selectAll('rect')
+        this.svg.selectAll('rect')
             .data(data)
             .enter()
             .append('rect')
-            .attr('width', size)
-            .attr('height', size)
+            .attr('width', 0)
+            .attr('height', 0)
             .attr('x', d => d[1])
             .attr('y', d => d[2])
-            .attr('stroke', 'transparent')
-            .attr('stroke-width', 2)
             .attr('fill', style.fill)
+            .attr('stroke-width', 2)
+            .attr('stroke', style.stroke)
             .attr('rx', 5)
             .attr('ry', 5)
             .exit();
 
-        const rect2 = this.svg.append('g');
-        rect2.selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
+        this.svg.selectAll('rect')
+            .transition()
+            .delay((d, i) => i * 30)
+            .duration(1000)
             .attr('width', size)
             .attr('height', size)
-            .attr('x', d => d[1])
-            .attr('y', d => d[2])
-            .attr('stroke', style.stroke)
-            .attr('stroke-width', 2)
-            .attr('fill', 'transparent')
-            .attr('rx', 5)
-            .attr('ry', 5)
-            .exit();
-
-        rect2.selectAll('rect')
-            .transition()
-            .delay((d, i) => (i * 30) + 500)
-            .duration(1500)
-            .attr('x', d => d[1] - 500)
-            // .attr('y', 0)
-            // .attr('width', 0)
-            // .attr('height', 0)
             .ease(d3.easeCircleOut);
 
         if(this.props.mode === '0' || this.props.mode === '1') {
@@ -92,6 +73,17 @@ class CopyArray extends Component {
                 .attr('font-size', '20px')
                 .text(d => this.props.mode)
                 .exit();
+        } else if(this.props.mode === 'identity') {
+            this.svg.selectAll('text')
+                .data(data)
+                .enter()
+                .append('text')
+                .attr('x', d => d[1])
+                .attr('y', d => d[2])
+                .attr('transform', 'translate(10, 23)')
+                .attr('font-size', (d, i) => ((i % width) === Math.floor(i / width) ? '25px' : '12px'))
+                .text((d, i) => ((i % width) === Math.floor(i / width) ? 1 : 0))
+                .exit();
         }
     }
 
@@ -99,7 +91,6 @@ class CopyArray extends Component {
         if(!this.svg) return;
         this.svg.selectAll('rect').remove();
         this.svg.selectAll('text').remove();
-        this.svg.selectAll('g').remove();
     }
 
     render() {
@@ -110,11 +101,11 @@ class CopyArray extends Component {
 
         width = width > 0 ? width : 0;
         height = height > 0 ? height : 0;
-        return <g className="newArray" transform={`translate(${-width / 2},${-height / 2})`} id={this.props.id + this.state.id} />;
+        return <g className="broadcastArray" transform={`translate(${-width / 2},${-height / 2})`} id={this.props.id + this.state.id} />;
     }
 }
 
-CopyArray.propTypes = {
+BroadcastArray.propTypes = {
     id: PropTypes.string,
     rectSize: PropTypes.number,
     style: PropTypes.object,    // eslint-disable-line
@@ -122,7 +113,7 @@ CopyArray.propTypes = {
     mode: PropTypes.string,
 };
 
-CopyArray.defaultProps = {
+BroadcastArray.defaultProps = {
     rectSize: 100,
     rectNumber: [4, 3],
     mode: '',
@@ -133,4 +124,4 @@ CopyArray.defaultProps = {
 };
 
 
-export default CopyArray;
+export default BroadcastArray;
