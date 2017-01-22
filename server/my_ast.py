@@ -196,14 +196,14 @@ class LocationVisitor(ast.NodeVisitor):
     def visit_BinOp(self, node):
         self.generic_visit(node)
         # Add | Sub | Mult | Div | Mod | Pow
-        self.result[node].identifier = type(node.op)
+        self.result[node].identifier = "BinOp:{0}".format(node.op.__class__.__name__)
         self.result[node].children.append(self.result[node.left])
         self.result[node].children.append(self.result[node.right])
 
     def visit_UnaryOp(self, node):
         self.generic_visit(node)
         # Invert | Not | UAdd | USub
-        self.result[node].identifier = type(node.op)
+        self.result[node].identifier = "UnaryOp:{0}".format(node.op.__class__.__name__)
         self.result[node].children.append(self.result[node.operand])
 
     def visit_Name(self, node):
