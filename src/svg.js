@@ -83,6 +83,8 @@ export default class SVG extends React.Component {
             return Animations.name;
         } else if(currentNode.identifier.startsWith('BinOp:')) {
             return Animations[currentNode.identifier.split(':')[1]];
+        } else if(currentNode.identifier.startsWith('UnaryOp:')) {
+            return Animations[currentNode.identifier.split(':')[1]];
         }
     }
 
@@ -126,6 +128,6 @@ SVG.defaultProps = {
             type: 'tuple',
             value: '(2, 3)',
         }],
-        identifier: 'BinOp:Add',
+        identifier: 'Call:np.transpose',
     },
 };

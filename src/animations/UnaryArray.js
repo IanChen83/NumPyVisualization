@@ -3,7 +3,7 @@ import TweenMax from 'gsap';
 
 const d3 = require('d3');
 
-class BroadcastArray extends Component {
+class UnaryArray extends Component {
     constructor(props) {
         super(props);
         this.rects = [];
@@ -20,15 +20,12 @@ class BroadcastArray extends Component {
         this.create();
         const rects0 = document.getElementById(`${this.props.id}${this.state.id}`).querySelectorAll(
             '.class0 rect');
-        const rects1 = document.getElementById(`${this.props.id}${this.state.id}`).querySelectorAll(
-            '.class1 rect');
-        if(rects0.length + rects1.length > 0) {
+        if(rects0.length > 0) {
             const width = this.props.rectNumber[0];
             const height = this.props.rectNumber[1];
             const size = this.props.rectSize;
             this.timeline = new TimelineMax()
-                .staggerTo(rects0, 0.7, { delay: 1, cycle: { y: (i => ((size + 5) * Math.floor(i / width))) } }, 0.1)
-                .staggerTo([...rects0, ...rects1], 0.7, { opacity: 0.5, cycle: { x: (i => (i < width * height ? `-=${width * size}` : `+=${width * size}`)) } }, 0.05);
+                .staggerTo(rects0, 0.7, { delay: 1, rotation: 360, fill: this.props.style.fill2 }, 0.1);
         }
     }
 
@@ -55,26 +52,6 @@ class BroadcastArray extends Component {
 
         this.svg.append('g')
             .attr('class', 'class0')
-            .attr('transform', `translate(${width * size}, 0)`)
-            .selectAll('rect')
-            .data(data)
-            .enter()
-            .append('rect')
-            .attr('width', size)
-            .attr('height', size)
-            .attr('x', d => d[1])
-            .attr('y', d => 0)
-            .attr('fill', style.fill1)
-            .attr('stroke-width', 2)
-            .attr('stroke', style.stroke)
-            .attr('opacity', (d, i) => (i >= width ? 0.5 : 1))
-            .attr('rx', 5)
-            .attr('ry', 5)
-            .exit();
-
-        this.svg.append('g')
-            .attr('class', 'class1')
-            .attr('transform', `translate(-${width * size}, 0)`)
             .selectAll('rect')
             .data(data)
             .enter()
@@ -83,7 +60,7 @@ class BroadcastArray extends Component {
             .attr('height', size)
             .attr('x', d => d[1])
             .attr('y', d => d[2])
-            .attr('fill', style.fill2)
+            .attr('fill', style.fill1)
             .attr('stroke-width', 2)
             .attr('stroke', style.stroke)
             .attr('rx', 5)
@@ -105,11 +82,11 @@ class BroadcastArray extends Component {
 
         width = width > 0 ? width : 0;
         height = height > 0 ? height : 0;
-        return <g className="broadcastArray" transform={`translate(${-width / 2},${-height / 2})`} id={this.props.id + this.state.id} />;
+        return <g className="unaryArray" transform={`translate(${-width / 2},${-height / 2})`} id={this.props.id + this.state.id} />;
     }
 }
 
-BroadcastArray.propTypes = {
+UnaryArray.propTypes = {
     id: PropTypes.string,
     rectSize: PropTypes.number,
     style: PropTypes.object, // eslint-disable-line
@@ -117,8 +94,8 @@ BroadcastArray.propTypes = {
     mode: PropTypes.string,
 };
 
-BroadcastArray.defaultProps = {
-    rectSize: 60,
+UnaryArray.defaultProps = {
+    rectSize: 80,
     rectNumber: [4, 3],
     mode: '',
     style: {
@@ -128,4 +105,4 @@ BroadcastArray.defaultProps = {
 };
 
 
-export default BroadcastArray;
+export default UnaryArray;
