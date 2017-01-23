@@ -85,6 +85,10 @@ export default class SVG extends React.Component {
             return Animations[currentNode.identifier.split(':')[1]];
         } else if(currentNode.identifier.startsWith('UnaryOp:')) {
             return Animations[currentNode.identifier.split(':')[1]];
+        } else if(currentNode.identifier === 'Subscript') {
+            return Animations.Subscript;
+        } else if(currentNode.identifier === 'Num') {
+            return Animations.Num;
         }
     }
 
@@ -106,6 +110,7 @@ export default class SVG extends React.Component {
                     </foreignObject>
                 </g>
                 <line x1={width - this.helpMessageWidth} y1="10" x2={width - this.helpMessageWidth} y2={this.props.height - 10} strokeWidth="1" stroke="black" />
+                <text x="0" y="20" fontSize="20">{'Current shape: (' + this.props.currentNode.dim.join(', ') + ')'}</text>
             </svg>
         );
     }
@@ -128,6 +133,6 @@ SVG.defaultProps = {
             type: 'tuple',
             value: '(2, 3)',
         }],
-        identifier: 'Call:np.transpose',
+        identifier: 'Subscript',
     },
 };

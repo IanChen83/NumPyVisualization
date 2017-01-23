@@ -18,6 +18,7 @@ export default class VisUIPage extends React.Component {
             displayNode: [],
             timeStep: -1,
             isInputFocused: false,
+            errorMessage: '',
         };
 
         this.onNpCmdChange = this.onNpCmdChange.bind(this);
@@ -40,7 +41,16 @@ export default class VisUIPage extends React.Component {
     // }
 
     onNpCmdChange(e) {
-        this.setState({ npCmd: e.target.value });
+        if(this.state.displayNode.length !== 0) {
+            this.setState({
+                displayNode: [],
+                timeStep: -1,
+                npCmd: e.target.value,
+                errorMessage: '',
+            });
+        } else {
+            this.setState({ npCmd: e.target.value, errorMessage: '' });
+        }
     }
 
     onArrNameChange(e) {
@@ -156,10 +166,12 @@ export default class VisUIPage extends React.Component {
                     let displayNode = displayNodeDFS(rootNode.children);
                     displayNode.push(rootNode);
                     console.log(displayNode);
-                    this.setState({ displayNode: displayNode, timeStep: 0 });
+                    this.setState({ displayNode: displayNode, timeStep: 0, errorMessage: '' });
                     setTimeout(this.incrementTimeStep, 5000);
+                } else if(nodeObj.status === 'failed') {
+                    this.setState({ errorMessage: nodeObj.result });
                 }
-            })
+            });
     }
 
     // =============== rendering ===============
@@ -237,16 +249,7 @@ export default class VisUIPage extends React.Component {
     }
 
     onInputFocus() {
-        if(this.state.displayNode.length !== 0) {
-            this.setState({
-                isInputFocused: true,
-                displayNode: [],
-                timeStep: -1,
-                npCmd: '',
-            });
-        } else {
-            this.setState({ isInputFocused: true });
-        }
+        this.setState({ isInputFocused: true });
     }
     onInputBlur() {
         this.setState({ isInputFocused: false });
@@ -292,6 +295,9 @@ export default class VisUIPage extends React.Component {
         return (
             <div style={{ fontSize: '20px' }}>
                 <p onClick={this.onInputFocus} dangerouslySetInnerHTML={{ __html: npCmd }} />
+                {
+                    ((this.state.errorMessage === '') ? null : <p style={{color: 'red'}}>{this.state.errorMessage}</p>)
+                }
             </div>
         );
     }

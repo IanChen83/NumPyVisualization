@@ -5,6 +5,7 @@ import BroadcastArray from './BroadcastArray';
 import UnaryArray from './UnaryArray';
 import ReshapeArray from './ReshapeArray';
 import SwapAxesArray from './SwapAxesArray';
+import SliceArray from './SliceArray';
 
 const OnesStyle = {
     fill: '#FF4D4D',
@@ -107,6 +108,18 @@ const TransposeObject = {
     obj: <SwapAxesArray id="transposeArray" style={ReshapeStyle} />,
 };
 
+const SliceObject = {
+    helpTitle: 'Slicing Operations',
+    helpMessage: ['Basic slicing extends Python’s basic concept of slicing to N dimensions. Basic slicing occurs when obj is a slice object (constructed by start:stop:step notation inside of brackets), an integer, or a tuple of slice objects and integers.', 'Ellipsis expand to the number of : objects needed to make a selection tuple of the same length as x'],
+    obj: <SliceArray id="sliceArray" style={ReshapeStyle} />,
+};
+
+const NumberObject = {
+    helpTitle: 'tl;dr: It\'s a number',
+    helpMessage: ['This number is having its 920th birthday.'],
+    obj: <NewArray id="numberArray" style={OnesStyle} rectNumber={[1, 1]} rectSize={300} />,
+};
+
 const Animations = {
     'np.ones': OnesObject,
     'np.zeros': ZerosObject,
@@ -127,7 +140,8 @@ const Animations = {
     Invert: UnaryObject,
     USub: UnaryObject,
     Not: UnaryObject,
-
+    Subscript: SliceObject,
+    Num: NumberObject,
 };
 
 export default Animations;

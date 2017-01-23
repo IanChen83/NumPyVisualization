@@ -25,6 +25,7 @@
     "gsap": "^1.19.1",
     "html-loader": "^0.4.4",
     "marked": "^0.3.6",
+    "randomcolor": "^0.4.4",
     "react": "^15.3.2",
     "react-addons-update": "^15.4.1",
     "react-codemirror": "^0.3.0",
