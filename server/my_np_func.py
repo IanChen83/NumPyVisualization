@@ -144,7 +144,7 @@ def np_transpose(dv, node, args, keywords):
         if i < 0 or i > len(dim1):
             raise ValueError('np.transpose(arr, axes) has invalid axes')
 
-    dim2 = (dim1[i] for i in axes)
+    dim2 = tuple(dim1[i] for i in axes)
     dv.result[node] = Token(dim2)
 
 def np_swapaxes(dv, node, args, keywords):

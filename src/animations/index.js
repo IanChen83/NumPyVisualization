@@ -2,9 +2,12 @@ import React from 'react';
 import NewArray from './NewArray';
 import CopyArray from './CopyArray';
 import BroadcastArray from './BroadcastArray';
+import UnaryArray from './UnaryArray';
+import ReshapeArray from './ReshapeArray';
+import SwapAxesArray from './SwapAxesArray';
 
 const OnesStyle = {
-    fill: '#E29BD7',
+    fill: '#FF4D4D',
     stroke: '#CB48B7',
 };
 
@@ -17,7 +20,7 @@ const OnesObject = {
 };
 
 const ZerosStyle = {
-    fill: '#F2F2EB',
+    fill: '#FF4D4D',
     stroke: '#E4E3D3',
 };
 
@@ -30,8 +33,8 @@ const ZerosObject = {
 };
 
 const NameStyle = {
-    fill: '#2E2D4D',
-    stroke: '#2E2D4D',
+    fill: '#FF4D4D',
+    stroke: '#FF4D4D',
 };
 
 const NameObject = {
@@ -63,10 +66,45 @@ const ZerosLikeObject = {
     obj: <CopyArray id="zeroslikeObject" style={ZerosStyle} mode="0" />,
 };
 
+const BroadcastStyle = {
+    fill1: '#FF4D4D',
+    fill2: '#4d4dff',
+};
+
 const BroadcastObject = {
-    helpTitle: 'Broadcasting Operation',
+    helpTitle: 'Binary Broadcasting Op',
     helpMessage: ['Broadcasting will happen during binary Operations like adding or multiplying, providing the two arrays have different shape.'],
-    obj: <BroadcastArray id="broadcastArray" />,
+    obj: <BroadcastArray id="broadcastArray" style={BroadcastStyle} />,
+};
+
+const UnaryObject = {
+    helpTitle: 'Unary Operations',
+    helpMessage: ['Unary operations will keep dimensions unchanged.'],
+    obj: <UnaryArray id="unaryArray" style={BroadcastStyle} />,
+};
+
+const ReshapeStyle = {
+    fill1: '#FF4D4D',
+    fill2: '#4d4dff',
+    stroke: 'black',
+};
+
+const ReshapeObject = {
+    helpTitle: 'np.reshape(arr, shape)',
+    helpMessage: ['Gives a new shape to an array without changing its data.'],
+    obj: <ReshapeArray id="reshapeArray" style={ReshapeStyle} />,
+};
+
+const SwapAxesObject = {
+    helpTitle: 'np.swapaxes(arr, shape)',
+    helpMessage: ['Interchange two axes of an array.'],
+    obj: <SwapAxesArray id="swapAxesArray" style={ReshapeStyle} />,
+};
+
+const TransposeObject = {
+    helpTitle: 'np.transpose(arr, axes=None)',
+    helpMessage: ['Permute the dimensions of an array.'],
+    obj: <SwapAxesArray id="transposeArray" style={ReshapeStyle} />,
 };
 
 const Animations = {
@@ -75,8 +113,21 @@ const Animations = {
     'np.identity': IdentityObject,
     'np.ones_like': OnesLikeObject,
     'np.zeros_like': ZerosLikeObject,
+    'np.reshape': ReshapeObject,
+    'np.swapaxis': SwapAxesObject,
+    'np.transpose': TransposeObject,
     name: NameObject,
     Add: BroadcastObject,
+    Sub: BroadcastObject,
+    Mult: BroadcastObject,
+    Div: BroadcastObject,
+    Mod: BroadcastObject,
+    Pow: BroadcastObject,
+    UAdd: UnaryObject,
+    Invert: UnaryObject,
+    USub: UnaryObject,
+    Not: UnaryObject,
+
 };
 
 export default Animations;

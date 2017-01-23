@@ -62,7 +62,7 @@ It's not difficult to caculate the dimention of the output array.
   Output shape: (1, __elements in a__)
 * np.moveaxis(a, source, destination)
   Output shape: *Dependent on source and diestination*
-* **np.swapaxis(a, axis[, start])**
+* **np.swapaxes(a, axis[, start])**
   Output shape: *Dependent on axis and start*
 * **np.transpose(a[, axes])**
   Output shape: *Dependent on axes*
