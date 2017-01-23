@@ -6,23 +6,20 @@ export default class AboutPage extends React.Component {
 		return(
 			<Segment>
 				<Header as="h1" style={{ margin: '15 auto' }}>
-					About <Header as="h1" style={{ display: 'inline' }} color="blue">Numpy-Visualization</Header>
+					About <Header as="h1" style={{ display: 'inline' }} color='blue'>Numpy-Visualization</Header>
 				</Header>
-				<div style={{ textAlign: 'left' }}>
+				<div style={{ textAlign: 'left', fontSize: '17px' }}>
 					<p>
-					What do you wnat to know ?
+						<span style={{ fontWeight: 'bold', color: '#2185D0' }}>Developer : </span>
+						<p>Patrick Chen, Tom Fan</p>
 					</p>
 					<p>
-					What do you wnat to know ?
+						<span style={{ fontWeight: 'bold', color: '#2185D0' }}>Instructor : </span>	
+						<p>Chung-Yang Ric Huang</p>
 					</p>
 					<p>
-					What do you wnat to know ?
-					</p>
-					<p>
-					What do you wnat to know ?
-					</p>
-					<p>
-					What do you wnat to know ?
+						<span style={{ fontWeight: 'bold', color: '#2185D0' }}>Project : </span>
+						<p>NTUEE Web Programming final, 2016 Fall</p>
 					</p>
 				</div>
 			</Segment>
