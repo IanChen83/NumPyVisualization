@@ -37,14 +37,14 @@ class SwapAxesArray extends Component {
                         y: (i => data[i][1]),
                     },
                 })
-                .staggerTo(rects0, 0.5, {
+                .staggerTo(rects0, 0.3, {
                     opacity: 1,
                     width: size,
                     height: size,
                 }, 0.1)
-                .staggerTo(rects0, 0.5, { scale: 0.5, fill: 'transparent', x: '-=300' },
+                .staggerTo(rects0, 0.3, { scale: 0.5, fill: 'transparent', x: '-=300' },
                     0.2)
-                .staggerTo(rects0, 0.7, {
+                .staggerTo(rects0, 0.4, {
                     transform: '',
                     delay: 0.5,
                     scale: 1,
