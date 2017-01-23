@@ -105,6 +105,8 @@ export default class VisUIPage extends React.Component {
 				}
 				break;
 		}
+
+		this.setState({ curArrName: '', curArrShape: '' });
 	}
 
 	onClickRmArr(e, arrIdx) {
@@ -163,7 +165,7 @@ export default class VisUIPage extends React.Component {
 			<Button
 				fluid basic positive
 				icon={ `${icon}` } labelPosition='right'
-				style={{ textAlign:'left', height: '8%' }}
+				style={{ textAlign:'left', height: '56px' }}
 				onClick={ onClickFunc }
 				content = { `${content}` }
 			>
@@ -237,7 +239,7 @@ export default class VisUIPage extends React.Component {
 				{'Command :'}
 				<Input
 					transparent placeholder="type command here..."
-					style={{ borderBottom: '1px solid black', fontSize: '15px', width: '70%' }}
+					style={{ borderBottom: '1px solid black', fontSize: '20px', width: '70%' }}
 					onChange={ this.onNpCmdChange }
 				>
 					<input
