@@ -175,10 +175,10 @@ export default class VisUIPage extends React.Component {
 
 	renderInitArr(placeholder, inputOnChange, inputValue) {
 		return (
-			<Segment>
+			<div style={{ margin: '20px auto', padding: '5px 0' }}>
 				<Input
 					transparent placeholder= {`${placeholder}`}
-					style={{ borderBottom: '1px solid black', fontSize: '15px', width: '100%', height: '5%' }}
+					style={{ borderBottom: '1px solid black', fontSize: '15px', width: '100%' }}
 					onChange={ inputOnChange }
 				>
 					<input
@@ -186,7 +186,7 @@ export default class VisUIPage extends React.Component {
 						value={ inputValue }
 					/>
 				</Input>
-			</Segment>
+			</div>
 		);
 	}
 
@@ -275,8 +275,8 @@ export default class VisUIPage extends React.Component {
 							{ this.renderArrTable() }
 						</Grid.Column>
 						<Grid.Column width={3}>
-							{ this.renderInitArr('name...', this.onArrNameChange, this.state.curArrName) }
-							{ this.renderInitArr('shape...', this.onArrShapeChange, this.state.curArrShape) }
+							{ this.renderInitArr('Array name', this.onArrNameChange, this.state.curArrName) }
+							{ this.renderInitArr('Array shape', this.onArrShapeChange, this.state.curArrShape) }
 							{ this.renderBtn('add', this.onClickAddNewArr, 'add circle') }
 						</Grid.Column>
 					</Grid.Row>
