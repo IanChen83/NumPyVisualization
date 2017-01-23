@@ -105,6 +105,8 @@ export default class VisUIPage extends React.Component {
 				}
 				break;
 		}
+
+		this.setState({ curArrName: '', curArrShape: '' });
 	}
 
 	onClickRmArr(e, arrIdx) {
