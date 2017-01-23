@@ -8,7 +8,7 @@ import SwapAxesArray from './SwapAxesArray';
 
 const OnesStyle = {
     fill: '#FF4D4D',
-    stroke: '#CB48B7',
+    stroke: '#FF4D4D',
 };
 
 const OnesObject = {
@@ -20,7 +20,7 @@ const OnesObject = {
 };
 
 const ZerosStyle = {
-    fill: '#FF4D4D',
+    fill: '#4d4dff',
     stroke: '#E4E3D3',
 };
 

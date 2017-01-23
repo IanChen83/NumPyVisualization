@@ -52,8 +52,7 @@ export default class VisualizePage extends React.Component {
 	render() {
 		return(
 			<Segment style={{ paddingLeft: 0, paddingRight: 0 }}>
-				{this.renderMenu()}
-				{this.renderSubPage()}
+				<VisUIPage />
 			</Segment>
 		);
 	}

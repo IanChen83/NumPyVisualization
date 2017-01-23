@@ -25,7 +25,7 @@ class UnaryArray extends Component {
             const height = this.props.rectNumber[1];
             const size = this.props.rectSize;
             this.timeline = new TimelineMax()
-                .staggerTo(rects0, 0.7, { delay: 1, rotation: 360, fill: this.props.style.fill2, yoyo: true, repeat: -1, repeatDelay: 3 }, 0.1);
+                .staggerTo(rects0, 0.7, { delay: 1, rotation: 360, fill: this.props.style.fill2 }, 0.1);
         }
     }
 

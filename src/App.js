@@ -58,7 +58,7 @@ export default class App extends React.Component {
 					<Grid.Column width={6} verticalAlign="bottom">
 						<h1 style={{ textAlign: 'left', marginTop: 20 }}>
 							<Icon name="home" color="blue" />
-							Numpy Visualization
+							NumPy Visualization
 						</h1>
 					</Grid.Column>
 					<Grid.Column width={6} verticalAlign="bottom" style={{textAlign: 'right'}}>
