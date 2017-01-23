@@ -121,8 +121,8 @@ class DimensionVisitor(ast.NodeVisitor):
             if node.id in self.predefined:
                 self.result[node] = deepcopy(self.predefined[node.id])
             else:
-                raise ValueError('Node with name \'{0}\' is undefined'.format(node.id))
-                # self.result[node] = Token()
+                # raise ValueError('Node with name \'{0}\' is undefined'.format(node.id))
+                self.result[node] = Token()
 
     def visit_BinOp(self, node):
         if node not in self.result:
