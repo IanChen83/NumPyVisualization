@@ -41,7 +41,7 @@ const NameStyle = {
 const NameObject = {
     helpTitle: 'It\'s an array you defined',
     helpMessage: [
-        'Poor kid, don\'t tell me you have forget about it...',
+        'Poor kid, don\'t tell me you have forgotten about it...',
     ],
     obj: <NewArray id="nameObject" style={NameStyle} />,
 };
