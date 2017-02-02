@@ -167,7 +167,7 @@ export default class VisUIPage extends React.Component {
                     displayNode.push(rootNode);
                     console.log(displayNode);
                     this.setState({ displayNode: displayNode, timeStep: 0, errorMessage: '' });
-                    setTimeout(this.incrementTimeStep, 5000);
+                    setTimeout(this.incrementTimeStep, 7000);
                 } else if(nodeObj.status === 'failed') {
                     this.setState({ errorMessage: nodeObj.result });
                 }
@@ -314,7 +314,7 @@ export default class VisUIPage extends React.Component {
 
         if (timeStep === -1 || timeStep === displayNode.length - 1) return;
         this.setState({timeStep: timeStep + 1});
-        setTimeout(this.incrementTimeStep, 5000);
+        setTimeout(this.incrementTimeStep, 7000);
     }
 
     render() {

@@ -45,16 +45,15 @@ class ReshapeArray extends Component {
                         y: (i => data[i][1]),
                     },
                 })
-                .staggerTo(rects0, 0.5, {
+                .staggerTo(rects0, 0.3, {
                     opacity: 1,
                     width: size,
                     height: size,
-                }, 0.1)
-                .staggerTo(rects0, 0.5, { scale: 0.5, fill: 'transparent', x: '-=300' },
-                    0.2)
-                .staggerTo(rects0, 0.7, {
+                }, 0.05)
+                .staggerTo(rects0, 0.2, { scale: 0.5, fill: 'transparent', x: '-=300' },
+                    0.1)
+                .staggerTo(rects0, 0.3, {
                     transform: '',
-                    delay: 0.5,
                     scale: 1,
                     cycle: {
                         x: (i => data2[i][0]),
@@ -62,7 +61,7 @@ class ReshapeArray extends Component {
                     },
                     fill: this.props.style.fill2,
                 },
-                    0.3);
+                    0.15);
         }
     }
 
